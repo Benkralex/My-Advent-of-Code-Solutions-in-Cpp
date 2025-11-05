@@ -1,0 +1,129 @@
+#include <vector>
+#include <algorithm>
+#include <climits>
+
+using std::vector;
+
+class Edge {
+public:
+    int start;
+    int end;
+    int cost;
+
+    Edge(int start_, int end_, int cost_) : 
+        start(start_), end(end_), cost(cost_) {}
+};
+
+class Node {
+public:
+    int id;
+    int cost;
+
+    Node(int id_) : 
+        id(id_), cost(INT_MAX) {}
+    Node(int id_, int cost_) : 
+        id(id_), cost(cost_) {}
+};
+
+class Path {
+public:
+    vector<int> nodes;
+    int totalCost;
+
+    Path(const vector<int>& nodes_, int totalCost_) : 
+        nodes(nodes_), totalCost(totalCost_) {}
+};
+
+class Graph {
+public:
+    int nodeCount;
+    vector<Edge> edgesOut;
+
+    Graph(int nodes) : nodeCount(nodes) {}
+
+    void addEdge(const Edge& e) { edgesOut.push_back(e); }
+    void addEdge(int start, int end, int cost) { edgesOut.emplace_back(start, end, cost); }
+
+    vector<Edge> getEdgesFromNode(int node) const {
+        vector<Edge> outgoingEdges;
+        for (const auto& edge : edgesOut) {
+            if (edge.start == node) {
+                outgoingEdges.push_back(edge);
+            }
+        }
+        return outgoingEdges;
+    }
+
+    vector<Edge> getEdgesToNode(int node) const {
+        vector<Edge> incomingEdges;
+        for (const auto& edge : edgesOut) {
+            if (edge.end == node) {
+                incomingEdges.push_back(edge);
+            }
+        }
+        return incomingEdges;
+    }
+
+    vector<int> getNeighbours(int node) const {
+        vector<int> neighbours;
+        for (const auto& edge : edgesOut) {
+            if (edge.start == node) {
+                neighbours.push_back(edge.end);
+            }
+        }
+        return neighbours;
+    }
+
+    Path dijkstraSearch(int startNode, int goalNode) {
+        vector<int> costs;
+        vector<int> predecessors;
+        vector<int> visitedNodes;
+        vector<int> stagedNodes;
+
+        for (int i = 0; i < nodeCount; i++) {
+            costs.emplace_back(INT_MAX);
+            predecessors.emplace_back(-1);
+        }
+        costs[startNode] = 0;
+        stagedNodes.emplace_back(startNode);
+
+        while (stagedNodes.size() != 0) {
+            // Find node in stagedNodes with lowest cost
+            int currentNode = stagedNodes[0];
+            int minCost = costs[currentNode];
+            for (const auto& node : stagedNodes) {
+                if (costs[node] < minCost) {
+                    minCost = costs[node];
+                    currentNode = node;
+                }
+            }
+
+            // Move currentNode from stagedNodes to visitedNodes
+            stagedNodes.erase(find(stagedNodes.begin(), stagedNodes.end(), currentNode));
+            visitedNodes.push_back(currentNode);
+
+            // Update costs for neighbours of currentNode
+            for (const auto& edge : getEdgesFromNode(currentNode)) {
+                int cost = edge.cost + costs[currentNode];
+                if (cost < costs[edge.end]) {
+                    predecessors[edge.end] = currentNode;
+                    costs[edge.end] = cost;
+                }
+                
+                if (find(stagedNodes.begin(), stagedNodes.end(), edge.end) == stagedNodes.end()) {
+                    stagedNodes.emplace_back(edge.end);
+                }
+            }
+        }
+
+        // Backtrack to find path
+        vector<int> path;
+        int step = goalNode;
+        while (step != -1) {
+            path.push_back(step);
+            step = predecessors[step];
+        }
+
+        return Path(path, costs[goalNode]);
+    }
+};

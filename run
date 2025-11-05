@@ -1,0 +1,99 @@
+#!/bin/bash
+
+# ===========================================
+# Advent-of-Code Runner
+# Usage:
+#   ./run.sh [-y YEAR] [-d DAY] [-p PART]
+# If no args are given, runs interactively.
+# ===========================================
+
+# Defaultwerte (leer = interaktive Abfrage)
+year=""
+day=""
+part=""
+
+# Argumente parsen
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -y|--year)
+            year="$2"
+            shift 2
+            ;;
+        -d|--day)
+            day="$2"
+            shift 2
+            ;;
+        -p|--part)
+            part="$2"
+            shift 2
+            ;;
+        -h|--help)
+            echo "Usage: $0 [-y YEAR] [-d DAY] [-p PART]"
+            exit 0
+            ;;
+        *)
+            echo "Unbekannte Option: $1"
+            exit 1
+            ;;
+    esac
+done
+
+# Interaktive Eingabe, falls Argumente fehlen
+if [[ -z "$year" ]]; then
+    echo "Wähle Jahr:"
+    select y in 2024 2025; do
+        [[ -n "$y" ]] && year="$y" && break
+    done
+fi
+
+if [[ -z "$day" ]]; then
+    read -p "Gib den Tag (1-25) ein: " day
+fi
+
+if [[ -z "$part" ]]; then
+    read -p "Gib den Part (1 oder 2) ein: " part
+fi
+
+# Validierung
+if ! [[ "$year" =~ ^20(24|25)$ ]]; then
+    echo "Ungültiges Jahr: $year"
+    exit 1
+fi
+
+if ! [[ "$day" =~ ^[1-9]$|^1[0-9]$|^2[0-5]$ ]]; then
+    echo "Ungültiger Tag: $day"
+    exit 1
+fi
+
+if ! [[ "$part" =~ ^[12]$ ]]; then
+    echo "Ungültiger Part: $part"
+    exit 1
+fi
+
+# Pfade
+src="./${year}/day${day}/part${part}.cpp"
+out="${year}d${day}p${part}"
+
+if [[ ! -f "$src" ]]; then
+    echo "Fehler: Datei nicht gefunden: $src"
+    exit 1
+fi
+
+echo "Kompiliere $src..."
+g++ -std=c++20 -O2 -o "$out" "$src"
+if [[ $? -ne 0 ]]; then
+    echo "Kompilierung fehlgeschlagen!"
+    exit 1
+fi
+
+# Eingabedatei automatisch finden
+input_file="./${year}/day${day}/input.txt"
+if [[ -f "$input_file" ]]; then
+    echo "Starte $out < $input_file"
+    ./"$out" < "$input_file"
+else
+    echo "Starte $out..."
+    echo "------------------------------"
+    echo ""
+    ./"$out"
+fi
