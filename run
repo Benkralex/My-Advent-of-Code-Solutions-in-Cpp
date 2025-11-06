@@ -91,9 +91,17 @@ input_file="./${year}/day${day}/input.txt"
 if [[ -f "$input_file" ]]; then
     echo "Starte $out < $input_file"
     ./"$out" < "$input_file"
+    if [[ $? -ne 0 ]]; then
+        echo "Fehler: Das Programm $out ist mit einem Fehler beendet (Segfault oder anderer Fehler)."
+        exit 1
+    fi
 else
     echo "Starte $out..."
     echo "------------------------------"
     echo ""
     ./"$out"
+    if [[ $? -ne 0 ]]; then
+        echo "Fehler: Das Programm $out ist mit einem Fehler beendet (Segfault oder anderer Fehler)."
+        exit 1
+    fi
 fi

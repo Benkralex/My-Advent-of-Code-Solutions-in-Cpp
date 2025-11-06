@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <numeric>
 
 using std::vector, std::string;
 
@@ -37,4 +38,20 @@ void sortVector(vector<int>& vec) {
 
 int maxElement(const vector<int>& vec) {
     return *std::max_element(vec.begin(), vec.end());
+}
+
+string join(const vector<string>& vec, const string& delimiter) {
+    return std::accumulate(vec.begin(), vec.end(), delimiter);
+}
+
+template <typename T>
+vector<T> operator+(const vector<T>& a, const vector<T>& b) {
+    vector<T> result = a;
+    result.insert(result.end(), b.begin(), b.end());
+    return result;
+}
+
+template <typename T>
+bool contains(const vector<T>& a, const T& b) {
+    return std::find(a.begin(), a.end(), b) != a.end();
 }
