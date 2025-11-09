@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -44,6 +45,10 @@ string join(const vector<string>& vec, const string& delimiter) {
     return std::accumulate(vec.begin(), vec.end(), delimiter);
 }
 
+string join(const vector<char>& vec, const string& delimiter) {
+    return std::accumulate(vec.begin(), vec.end(), delimiter);
+}
+
 template <typename T>
 vector<T> operator+(const vector<T>& a, const vector<T>& b) {
     vector<T> result = a;
@@ -54,4 +59,15 @@ vector<T> operator+(const vector<T>& a, const vector<T>& b) {
 template <typename T>
 bool contains(const vector<T>& a, const T& b) {
     return std::find(a.begin(), a.end(), b) != a.end();
+}
+
+bool contains(const string& str, const string& substring) {
+    return str.find(substring) != string::npos;
+}
+
+template <typename T>
+vector<T> reverse(const vector<T>& vec) {
+    vector<T> revVec = vec;
+    std::reverse(revVec.begin(), revVec.end());
+    return revVec;
 }
