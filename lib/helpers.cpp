@@ -57,6 +57,15 @@ vector<T> operator+(const vector<T>& a, const vector<T>& b) {
 }
 
 template <typename T>
+int search(const vector<T>& a, const T& b) {
+    auto idx = std::find(a.begin(), a.end(), b);
+    if (idx == a.end()) {
+        return -1;
+    }
+    return idx - a.begin();
+}
+
+template <typename T>
 bool contains(const vector<T>& a, const T& b) {
     return std::find(a.begin(), a.end(), b) != a.end();
 }
