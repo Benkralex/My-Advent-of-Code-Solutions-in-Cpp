@@ -33,6 +33,14 @@ vector<int> sVecToIVec(const vector<string>& strVec) {
     return intVec;
 }
 
+vector<long> sVecToLVec(const vector<string>& strVec) {
+    vector<long> longVec;
+    for (const string& s : strVec) {
+        longVec.push_back((long int)std::stoi(s));
+    }
+    return longVec;
+}
+
 void sortVector(vector<int>& vec) {
     std::sort(vec.begin(), vec.end());
 }
