@@ -43,8 +43,7 @@ int main() {
         {"./2025/day1/inputs/example1.txt"},
         {6},
         "./2025/day1/inputs/input.txt",
-        solve,
-        true
+        solve
     );
     rf.runInput();
     return 0;

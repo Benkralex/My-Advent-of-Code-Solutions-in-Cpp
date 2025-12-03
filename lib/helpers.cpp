@@ -3,8 +3,9 @@
 #include <string>
 #include <algorithm>
 #include <numeric>
+#include <cmath>
 
-using std::vector, std::string;
+using std::vector, std::string, std::pow;
 
 vector<string> splitString(const string& str, char delimiter) {
     vector<string> result;
@@ -33,6 +34,16 @@ vector<int> sVecToIVec(const vector<string>& strVec) {
     return intVec;
 }
 
+long iVecToLong(const vector<int>& intVec) {
+    long longNum = 0;
+    int j = intVec.size();
+    for (int i : intVec) {
+        j--;
+        longNum += i * (long)pow(10, j);
+    }
+    return longNum;
+}
+
 vector<long> sVecToLVec(const vector<string>& strVec) {
     vector<long> longVec;
     for (const string& s : strVec) {
@@ -43,6 +54,10 @@ vector<long> sVecToLVec(const vector<string>& strVec) {
 
 void sortVector(vector<int>& vec) {
     std::sort(vec.begin(), vec.end());
+}
+
+void sortVectorOpposite(vector<int>& vec) {
+    std::sort(vec.begin(), vec.end(), std::greater<int>());
 }
 
 int maxElement(const vector<int>& vec) {
@@ -87,4 +102,12 @@ vector<T> reverse(const vector<T>& vec) {
     vector<T> revVec = vec;
     std::reverse(revVec.begin(), revVec.end());
     return revVec;
+}
+
+vector<string> splitStringIntoChars(const string& str) {
+    vector<string> result;
+    for (char ch : str) {
+        result.push_back(string(1, ch));
+    }
+    return result;
 }
