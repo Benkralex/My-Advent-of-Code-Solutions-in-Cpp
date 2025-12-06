@@ -79,7 +79,7 @@ public:
         return fields;
     }
 
-    vector<char> getDiagonalSourroundingField(const Field& f) {
+    vector<char> getDiagonalSourroundingFields(const Field& f) {
         vector<char> diagonal;
         int r = f.rowIdx;
         int c = f.colIdx;
@@ -94,6 +94,51 @@ public:
             }
         }
         return diagonal;
+    }
+
+    vector<char> getVerticalSourroundingFields(const Field& f) {
+        vector<char> vertical;
+        int r = f.rowIdx;
+        int c = f.colIdx;
+        vector<std::pair<int, int>> directions = {
+            {-1, 0}, {1, 0}
+        };
+        for (const auto& dir : directions) {
+            int newR = r + dir.first;
+            int newC = c + dir.second;
+            if (newR >= 0 && newR < numRows() && newC >= 0 && newC < numCols()) {
+                vertical.push_back(data[newR][newC]);
+            }
+        }
+        return vertical;
+    }
+
+    vector<char> getHorizontalSourroundingFields(const Field& f) {
+        vector<char> horizontal;
+        int r = f.rowIdx;
+        int c = f.colIdx;
+        vector<std::pair<int, int>> directions = {
+            {0, -1}, {0, 1}
+        };
+        for (const auto& dir : directions) {
+            int newR = r + dir.first;
+            int newC = c + dir.second;
+            if (newR >= 0 && newR < numRows() && newC >= 0 && newC < numCols()) {
+                horizontal.push_back(data[newR][newC]);
+            }
+        }
+        return horizontal;
+    }
+
+    vector<char> getSourroundingFields(const Field& f) {
+        vector<char> sourrounding;
+        vector<char> diagonal = getDiagonalSourroundingFields(f);
+        vector<char> vertical = getVerticalSourroundingFields(f);
+        vector<char> horizontal = getHorizontalSourroundingFields(f);
+        sourrounding.insert(sourrounding.end(), diagonal.begin(), diagonal.end());
+        sourrounding.insert(sourrounding.end(), vertical.begin(), vertical.end());
+        sourrounding.insert(sourrounding.end(), horizontal.begin(), horizontal.end());
+        return sourrounding;
     }
 
     int searchHorizontal(const string& s) {

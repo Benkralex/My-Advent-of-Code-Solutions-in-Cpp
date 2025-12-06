@@ -47,7 +47,7 @@ long iVecToLong(const vector<int>& intVec) {
 vector<long> sVecToLVec(const vector<string>& strVec) {
     vector<long> longVec;
     for (const string& s : strVec) {
-        longVec.push_back((long int)std::stoi(s));
+        longVec.push_back(std::stol(s));
     }
     return longVec;
 }
@@ -110,4 +110,48 @@ vector<string> splitStringIntoChars(const string& str) {
         result.push_back(string(1, ch));
     }
     return result;
+}
+
+string replace(const string& str, const string& from, const string& to) {
+    string result = str;
+    size_t start_pos = result.find(from);
+    while (start_pos != string::npos) {
+        result.replace(start_pos, from.length(), to);
+        start_pos = result.find(from, start_pos + to.length());
+    }
+    return result;
+}
+
+template <typename T>
+vector<vector<T>> transpose(const vector<vector<T>>& matrix) {
+    if (matrix.empty()) return {};
+    size_t rows = matrix.size();
+    size_t cols = matrix[0].size();
+    vector<vector<T>> transposed(cols, vector<T>(rows));
+    for (size_t r = 0; r < rows; ++r) {
+        for (size_t c = 0; c < cols; ++c) {
+            transposed[c][r] = matrix[r][c];
+        }
+    }
+    return transposed;
+}
+
+string operator+(const string& a, const char& b) {
+    return a + string(1, b);
+}
+
+string charVecToString(const vector<char>& charVec) {
+    string result;
+    for (char ch : charVec) {
+        result += ch;
+    }
+    return result;
+}
+
+string trimString(const string& str) {
+    string strCopy = str;
+    const char* whitespace = " \t\n\r\f\v";
+    strCopy.erase(0, str.find_first_not_of(whitespace));
+    strCopy.erase(str.find_last_not_of(whitespace) + 1);
+    return strCopy;
 }
