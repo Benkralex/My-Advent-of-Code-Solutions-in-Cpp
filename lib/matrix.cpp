@@ -8,7 +8,20 @@ public:
     int colIdx;
     Field(size_t rowIdx_, size_t colIdx_) 
         : rowIdx(rowIdx_), colIdx(colIdx_) {}
+
+    bool operator==(const Field& other) const {
+        return rowIdx == other.rowIdx && colIdx == other.colIdx;
+    }
 };
+
+namespace std {
+    template <>
+    struct hash<Field> {
+        size_t operator()(const Field& f) const {
+            return hash<int>()(f.rowIdx) ^ (hash<int>()(f.colIdx) << 1);
+        }
+    };
+}
 
 class Matrix {
 private:
